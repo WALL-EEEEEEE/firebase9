@@ -3,6 +3,13 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import { initializeApp } from 'firebase/app'
+import { collection, getDocs, getFirestore } from 'firebase/firestore'
+
+type Book  = {
+  id: string
+  author: string
+  title: string
+}
 
 const firebaseConfig = {
     apiKey: "AIzaSyAQoBjqsQbm-0Zw7sCxpEtb8sgj31hXWnQ",
@@ -14,9 +21,24 @@ const firebaseConfig = {
     measurementId: "G-7Q0BDL0GH8"
 };
 
-function initFireBase() {
-  initializeApp(firebaseConfig)
-}
+//init firebase app
+initializeApp(firebaseConfig)
+//init service
+const db = getFirestore()
+//collection ref
+const colRef = collection(db, 'books')
+
+getDocs(colRef).then((snapshot) => {
+  let books: Book[] = []
+  snapshot.docs.forEach((doc) => {
+    books.push({ ...(doc.data() as Book)})
+  })
+  console.log(books)
+}).catch(err => {
+    console.log(err.message)
+})
+
+
 
 function App() {
 
