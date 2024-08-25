@@ -1,7 +1,7 @@
 import { SetStateAction, useDeferredValue, useEffect, useState } from 'react'
 import './App.css'
 import { initializeApp } from 'firebase/app'
-import { addDoc, collection, deleteDoc, doc, getDocs, getFirestore, onSnapshot, query, where, orderBy, serverTimestamp } from 'firebase/firestore'
+import { addDoc, collection, deleteDoc, doc, getDocs, getFirestore, onSnapshot, query, where, orderBy, serverTimestamp, DocumentReference, getDoc } from 'firebase/firestore'
 
 type Book = {
   id?: string
@@ -59,6 +59,25 @@ async function ListBooks(): Promise<Book[]> {
     throw new Error(`failed to fetch books: ${error}`)
   }
   return books
+}
+async function getBook(id: string): Promise<Book> {
+   const docRef = doc(db, 'books', id)
+   const docData =(await getDoc(docRef)).data() 
+   if (!!!docData) {
+      throw new Error(`book ${id} doesn't exist!`)
+   }
+   const book: Book = {
+      ...(docData as Book),
+      id: docData.id
+   }
+   return book
+}
+async function getBookBySnap(id: string, callback: ()=> void) {
+   const docRef = doc(db, 'books', id)
+   onSnapshot(docRef, (snapshot) => {
+      const book = snapshot.data() as Book
+      console.log(book)
+   })
 }
 
 async function getBooks( callback: (books: Book[]) => void) {
