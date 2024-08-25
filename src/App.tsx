@@ -1,7 +1,7 @@
 import { SetStateAction, useDeferredValue, useEffect, useState } from 'react'
 import './App.css'
 import { initializeApp } from 'firebase/app'
-import { addDoc, collection, deleteDoc, doc, getDocs, getFirestore, onSnapshot, query, where } from 'firebase/firestore'
+import { addDoc, collection, deleteDoc, doc, getDocs, getFirestore, onSnapshot, query, where, orderBy, serverTimestamp } from 'firebase/firestore'
 
 type Book = {
   id?: string
@@ -34,11 +34,12 @@ initializeApp(firebaseConfig)
 const db = getFirestore()
 //collection ref
 const colRef = collection(db, 'books')
-const q = query(colRef, where("author", "==", "Donald Trump"))
+const q = query(colRef, orderBy('createdAt'))
 
 async function addBook(book: Partial<Book>): Promise<void> {
   const _ = await addDoc(colRef, {
-    ...book
+    ...book,
+    createdAt: serverTimestamp()
   })
   console.log("a book added")
 }
