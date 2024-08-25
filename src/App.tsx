@@ -1,7 +1,7 @@
 import { SetStateAction, useDeferredValue, useEffect, useState } from 'react'
 import './App.css'
 import { initializeApp } from 'firebase/app'
-import { addDoc, collection, deleteDoc, doc, getDocs, getFirestore, onSnapshot, query, where, orderBy, serverTimestamp, DocumentReference, getDoc } from 'firebase/firestore'
+import { addDoc, collection, deleteDoc, doc, getDocs, getFirestore, onSnapshot, query, where, orderBy, serverTimestamp, DocumentReference, getDoc, updateDoc } from 'firebase/firestore'
 
 type Book = {
   id?: string
@@ -60,6 +60,7 @@ async function ListBooks(): Promise<Book[]> {
   }
   return books
 }
+//fetch a single document
 async function getBook(id: string): Promise<Book> {
    const docRef = doc(db, 'books', id)
    const docData =(await getDoc(docRef)).data() 
@@ -72,11 +73,19 @@ async function getBook(id: string): Promise<Book> {
    }
    return book
 }
+//sub a single document
 async function getBookBySnap(id: string, callback: ()=> void) {
    const docRef = doc(db, 'books', id)
    onSnapshot(docRef, (snapshot) => {
       const book = snapshot.data() as Book
       console.log(book)
+   })
+}
+
+async function updateBook(id: string) {
+   const docRef = doc(db, 'books', id)
+   await updateDoc(docRef, {
+     title: 'updated title',
    })
 }
 
