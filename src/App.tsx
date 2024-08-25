@@ -2,6 +2,7 @@ import { SetStateAction, useDeferredValue, useEffect, useState } from 'react'
 import './App.css'
 import { initializeApp } from 'firebase/app'
 import { addDoc, collection, deleteDoc, doc, getDocs, getFirestore, onSnapshot, query, where, orderBy, serverTimestamp, DocumentReference, getDoc, updateDoc } from 'firebase/firestore'
+import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth'
 
 type Book = {
   id?: string
@@ -35,6 +36,7 @@ const db = getFirestore()
 //collection ref
 const colRef = collection(db, 'books')
 const q = query(colRef, orderBy('createdAt'))
+const auth = getAuth()
 
 async function addBook(book: Partial<Book>): Promise<void> {
   const _ = await addDoc(colRef, {
@@ -97,6 +99,10 @@ async function getBooks( callback: (books: Book[]) => void) {
     })
     callback(books)
    })
+}
+async function signUp(username: string, password: string) {
+  const cred = await createUserWithEmailAndPassword(auth, username, password)
+  console.log('user created:', cred)
 }
 
 
