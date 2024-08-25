@@ -1,7 +1,7 @@
 import { SetStateAction, useDeferredValue, useEffect, useState } from 'react'
 import './App.css'
 import { initializeApp } from 'firebase/app'
-import { addDoc, collection, deleteDoc, doc, getDocs, getFirestore } from 'firebase/firestore'
+import { addDoc, collection, deleteDoc, doc, getDocs, getFirestore, onSnapshot } from 'firebase/firestore'
 
 type Book = {
   id?: string
@@ -59,12 +59,22 @@ async function ListBooks(): Promise<Book[]> {
   return books
 }
 
+async function getBooks( callback: (books: Book[]) => void) {
+   onSnapshot(colRef, (snapshot) => {
+    let books: Book[] = []
+    snapshot.docs.forEach((doc) => {
+      books.push({...doc.data(), id: doc.id} as Book)
+    })
+    callback(books)
+   })
+}
+
 
 function App() {
   const [bookList, setBookList] = useState<Book[]>([])
 
   useEffect(() => {
-    ListBooks().then((books: Book[]) => {
+    getBooks((books) => {
       setBookList(books)
     }).catch((e) => {
       console.error(e)
@@ -122,19 +132,6 @@ function App() {
             <label htmlFor="author">Author</label>
             <input type="text" name="author" required />
             <button>add a new book</button>
-          </form>
-        </div>
-
-        <div className='c-delete-book'>
-          <form className="card" onSubmit={(e) => {
-            e.preventDefault()
-            const form = e.target as HTMLFormElement
-            const bookId = form.id.value
-
-          }}>
-            <label htmlFor="id">Document id:</label>
-            <input type="text" name="id" required />
-            <button>delete a book</button>
           </form>
         </div>
       </div>
