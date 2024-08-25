@@ -1,7 +1,7 @@
 import { SetStateAction, useDeferredValue, useEffect, useState } from 'react'
 import './App.css'
 import { initializeApp } from 'firebase/app'
-import { addDoc, collection, deleteDoc, doc, getDocs, getFirestore, onSnapshot } from 'firebase/firestore'
+import { addDoc, collection, deleteDoc, doc, getDocs, getFirestore, onSnapshot, query, where } from 'firebase/firestore'
 
 type Book = {
   id?: string
@@ -34,6 +34,7 @@ initializeApp(firebaseConfig)
 const db = getFirestore()
 //collection ref
 const colRef = collection(db, 'books')
+const q = query(colRef, where("author", "==", "Donald Trump"))
 
 async function addBook(book: Partial<Book>): Promise<void> {
   const _ = await addDoc(colRef, {
@@ -60,7 +61,7 @@ async function ListBooks(): Promise<Book[]> {
 }
 
 async function getBooks( callback: (books: Book[]) => void) {
-   onSnapshot(colRef, (snapshot) => {
+   onSnapshot(q, (snapshot) => {
     let books: Book[] = []
     snapshot.docs.forEach((doc) => {
       books.push({...doc.data(), id: doc.id} as Book)
