@@ -3,7 +3,7 @@ import './App.css'
 import { initializeApp } from 'firebase/app'
 import { addDoc, collection, deleteDoc, doc, getDocs, getFirestore, onSnapshot, query, where, orderBy, serverTimestamp, DocumentReference, getDoc, updateDoc } from 'firebase/firestore'
 import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth'
-import SignUp from './Login'
+import  { Login, SignUp, Logout } from './Login'
 
 type Book = {
   id?: string
@@ -142,7 +142,6 @@ function App() {
     <>
       <div className='c-app'>
         <h1>Firebase Firestore</h1>
-        <SignUp/>
 
         <div className='c-book-list'>
           <h3>Book Shelf</h3>
@@ -167,6 +166,10 @@ function App() {
             <button>add a new book</button>
           </form>
         </div>
+
+        <SignUp></SignUp>
+        <Login></Login>
+        <Logout></Logout>
       </div>
     </>
   )

@@ -59,6 +59,28 @@
 .prefix {
   font-weight: bolder;
 }
+.sign-up-form {
+  min-width: 50%;
+  form {
+    display: flex;
+    flex-direction: column;
+    gap:1rem;
+    border: 1px solid pink;
+    width: 40%;
+    margin: 0 auto;
+    padding: 1rem;
+    p {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      gap: 1rem;
+      label {
+        font-weight: bold;
+      }
+    }
+  }
+}
+
 .login-form {
   min-width: 50%;
   form {
@@ -79,4 +101,27 @@
       }
     }
   }
+}
+
+.logout-form {
+  min-width: 50%;
+  form {
+    display: flex;
+    flex-direction: column;
+    gap:1rem;
+    border: 1px solid pink;
+    width: 40%;
+    margin: 0 auto;
+    padding: 1rem;
+    p {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      gap: 1rem;
+      label {
+        font-weight: bold;
+      }
+    }
+  }
+
 }
